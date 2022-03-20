@@ -91,27 +91,22 @@ def insert_feedback(ip, email, feedback):
 
 @app.route('/logs', methods=['POST'])
 def logs():
-    if request.method == 'POST':
-        username = request.form['username']
-        password = request.form['password']
-        user = {
-            'username': username,
-            'password': password
-        }
-        if username == 'admin' and password == 'admin':
-            conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM logs")
-            logs = cur.fetchall()
-            conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
-            cur = conn.cursor()
-            cur.execute("SELECT * FROM feedback")
-            feedbacks = cur.fetchall()
-            return render_template('logs_backup.html', logs=logs, feedbacks=feedbacks)
-        else:
-            return app.send_static_file('index.html')
-    elif request.method == 'GET':
-        return app.send_static_file('index.html')
+    username = request.json['username']
+    password = request.json['password']
+    if username == 'admin' and password == 'admin':
+        conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM logs")
+        logs = cur.fetchall()
+        conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM feedback")
+        feedbacks = cur.fetchall()
+        return jsonify(logs=logs, feedbacks=feedbacks)
+        # return render_template('logs_backup.html', logs=logs, feedbacks=feedbacks)
+    else:
+        return { 'status': 'Incorrect Credentials' }
+        # return app.send_static_file('index.html')
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
