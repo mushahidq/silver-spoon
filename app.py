@@ -1,11 +1,12 @@
 import datetime
+import email
 import json, requests, random, sys
 import traceback
 from os import stat
 import os
 from turtle import st
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
-# from flask_cors import CORS
+from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse
 import sqlite3
 from urllib import parse
@@ -16,9 +17,8 @@ from requests.utils import requote_uri
 os.environ['NO_PROXY'] = '127.0.0.1'
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
-# CORS(app)
+CORS(app)
 api = Api(app)
-
 class ScannerAPI(Resource):
     def get(self):
         parser = reqparse.RequestParser()
@@ -26,7 +26,7 @@ class ScannerAPI(Resource):
         args = parser.parse_args()
         url = args['url']
         status = self.scan(url)
-        insert_log(request.remote_addr, url, status)
+        insert_log(request.remote_addr, url, status.get('status'))
         return status
     
     def post(self):
@@ -80,10 +80,61 @@ def insert_log(ip, url, result):
     cur.execute("INSERT INTO logs (ip, url, result, datetime) VALUES (?, ?, ?, ?)", (ip, url, str(result), current_datetime))
     conn.commit()
 
+def insert_feedback(ip, email, feedback):
+    conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+    cur = conn.cursor()
+    cur.execute("CREATE TABLE IF NOT EXISTS feedback (id INTEGER PRIMARY KEY AUTOINCREMENT, ip TEXT, email TEXT, feedback TEXT, datetime TIMESTAMP)")
+    conn.commit()
+    current_datetime = datetime.datetime.now()
+    cur.execute("INSERT INTO feedback (ip, email, feedback, datetime) VALUES (?, ?, ?, ?)", (ip, email, feedback, current_datetime))
+    conn.commit()
+
+@app.route('/logs', methods=['POST'])
+def logs():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = {
+            'username': username,
+            'password': password
+        }
+        if username == 'admin' and password == 'admin':
+            conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM logs")
+            logs = cur.fetchall()
+            conn = sqlite3.connect('database.db', detect_types=sqlite3.PARSE_DECLTYPES | sqlite3.PARSE_COLNAMES)
+            cur = conn.cursor()
+            cur.execute("SELECT * FROM feedback")
+            feedbacks = cur.fetchall()
+            return render_template('logs_backup.html', logs=logs, feedbacks=feedbacks)
+        else:
+            return app.send_static_file('index.html')
+    elif request.method == 'GET':
+        return app.send_static_file('index.html')
+
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    parser = reqparse.RequestParser()
+    parser.add_argument('email', type=str, required=True, help="Email cannot be blank!")
+    parser.add_argument('feedback', type=str, required=True, help="Feedback cannot be blank!")
+    args = parser.parse_args()
+    feedback = args['feedback']
+    email = args['email']
+    if feedback:
+        insert_feedback(request.remote_addr, feedback, email)
+        return {'status': 'success'}
+    else:
+        return {'status': 'failed'}
+
 @app.route('/', methods=['GET', 'POST'], defaults={'path': ''})
 def serve(path):
     return send_from_directory(app.static_folder, 'index.html')
 
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+   
 api.add_resource(ScannerAPI, '/scan', endpoint='scan')
 
 if __name__ == '__main__':
