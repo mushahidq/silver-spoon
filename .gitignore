@@ -1,2 +1,5 @@
-#Python virtual environment
+# Python virtual environment
 virt_env/
+
+# database
+database.sb
