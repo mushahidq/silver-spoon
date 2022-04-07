@@ -3,3 +3,7 @@ virt_env/
 
 # database
 database.sb
+
+.env
+
+struts_scanner.part*

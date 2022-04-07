@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 async function loginUser(creds) {
     return fetch('http://localhost:5000/logs', {
         method: 'POST',
+        mode: 'cors',
         headers: {
             'Content-Type': 'application/json'
         },

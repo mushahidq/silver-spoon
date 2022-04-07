@@ -78,6 +78,23 @@ input {
   font-weight: bold;
   color: rgba(255,255,255, 0.8);
 }
+ select {
+  background: 0;
+  width: 280px;
+  height: 2rem;
+  outline: 0;
+  border: 0;
+  border-bottom: 2px solid rgba(255,255,255, 0.3);
+  margin: 20px 0;
+  padding-bottom: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  color: rgba(255,255,255, 0.8);
+}
+
+option {
+  background-color: #282c34;
+}
 button {
   border: 0;
   padding: 0.25rem;
