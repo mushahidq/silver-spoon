@@ -20,7 +20,7 @@ const About = () => {
             // make axios post request
             await axios({
               method: "post",
-              url: "http://localhost:5000/feedback",
+              url: "/feedback",
               data: loginFormData,
               headers: { "Content-Type": "multipart/form-data" },
             }).then(response => {

@@ -3,7 +3,7 @@ import { Helmet } from 'react-helmet';
 import PropTypes from 'prop-types';
 
 async function loginUser(creds) {
-    return fetch('http://localhost:5000/logs', {
+    return fetch('/logs', {
         method: 'POST',
         mode: 'cors',
         headers: {

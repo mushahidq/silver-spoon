@@ -14,7 +14,7 @@ const Home = () => {
         e.preventDefault();
         setMessage('');
         setSubmitting(true);
-        axios.get('http://localhost:5000/scan?url=' + url + '&type=' + type).then(response => {
+        axios.get('/scan?url=' + url + '&type=' + type).then(response => {
             setSubmitting(false);
             setMessage(response.data.status);
         }).catch(() => {
