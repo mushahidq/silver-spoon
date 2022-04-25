@@ -5,7 +5,6 @@ import random
 from dotenv import load_dotenv
 from os import stat
 import os
-from turtle import st
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 from flask_cors import CORS
 from flask_restful import Api, Resource, reqparse

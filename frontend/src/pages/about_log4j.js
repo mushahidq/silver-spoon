@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from 'react-helmet';
 
-const About = () => {
+const About_log4j = () => {
     const TITLE = 'Apache Struts Scanner';
     return (
         <div className="App">
@@ -9,11 +9,11 @@ const About = () => {
                 <title>{ TITLE }</title>
             </Helmet>
             <header className="App-header">
-                <div className="container">
-                    <h3>About Apache Struts RCE Vulnerability</h3>
+                <div className="container" style={{transform: "translate(-50%,-60%)"}}>
+                    <h3>About Log4Shell Vulnerability</h3>
                     <p>
-                        Apache Struts is a Java web framework that is used to build web applications.
-                        It is a Java-based web framework that is used to build web applications.
+                        Log4Shell (CVE-2021-44228) was a zero-day vulnerability in Log4j,
+                        a popular Java logging framework, involving arbitrary code execution.
                     </p>
                 </div>
             </header>
@@ -21,4 +21,4 @@ const About = () => {
     );
 }
 
-export default About;
+export default About_log4j;

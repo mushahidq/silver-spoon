@@ -8,7 +8,7 @@ const Home = () => {
     const [message, setMessage] = useState('');
     const [submitting, setSubmitting] = useState(false);
     const [type, setType] = useState('');
-    const TITLE = 'Apache Struts Scanner';
+    const TITLE = 'Apache Struts and Log4J Scanner';
 
     let handleSubmit = (e) => {
         e.preventDefault();

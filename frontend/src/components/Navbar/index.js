@@ -16,7 +16,8 @@ const Navbar = () => {
 
                 <NavMenu>
                     <NavLink to='/' activeStyle>Home</NavLink>
-                    <NavLink to='/about'>About Struts</NavLink>
+                    <NavLink to='/about_struts'>About Struts</NavLink>
+                    <NavLink to='/about_log4j'>About Log4J</NavLink>
                     <NavLink to='/contact'>Contact</NavLink>
                 </NavMenu>
             </Nav>
