@@ -26,7 +26,7 @@ admin_username = os.getenv("ADMIN")
 admin_password = os.getenv("PASSWORD")
 
 app = Flask(__name__, static_url_path='', static_folder='frontend/build')
-CORS(app)
+# CORS(app)
 api = Api(app)
 class ScannerAPI(Resource):
     def get(self):
